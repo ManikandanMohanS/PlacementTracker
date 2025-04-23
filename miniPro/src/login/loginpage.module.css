@@ -1,0 +1,99 @@
+/* Full-page container */
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f4f4f4;
+}
+
+/* Login box */
+.container {
+  width: 350px;
+  padding: 20px;
+  background: #ffffff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Heading style */
+h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Input fields */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Button styling */
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Primary button (Login/Signup) */
+button:first-of-type {
+  background: #007bff;
+  color: white;
+}
+
+button:first-of-type:hover {
+  background: #0056b3;
+}
+
+/* Toggle button */
+button:nth-of-type(2) {
+  background: #6c757d;
+  color: white;
+}
+
+button:nth-of-type(2):hover {
+  background: #5a6268;
+}
+
+/* Logout button */
+button:last-of-type {
+  background: #dc3545;
+  color: white;
+}
+
+button:last-of-type:hover {
+  background: #c82333;
+}
+
+/* Error message */
+p {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 400px) {
+  .container {
+    width: 90%;
+    padding: 15px;
+  }
+}

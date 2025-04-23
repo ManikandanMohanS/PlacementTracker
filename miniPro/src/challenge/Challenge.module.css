@@ -1,0 +1,135 @@
+/* Challenge.module.css */
+
+.challenges {
+  padding: 40px 20px;
+  background-color: #f5f7fa;
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  max-width: 900px;
+  width: 100%;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Title */
+.challengeTitle {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Grid layout for challenge categories */
+.challengeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Challenge cards */
+.challengeCard {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.challengeCard:hover {
+  transform: translateY(-5px);
+}
+
+.challengeCard h3 {
+  font-size: 20px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+/* Solve button */
+.solveBtn {
+  background: #0d4f96 !important;
+  color: #fff;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.solveBtn:hover {
+  background: #2983eab9 !important;
+}
+
+/* Problem List */
+.problemList {
+  margin-top: 20px;
+  position: relative;
+  padding-top: 50px; /* Space for fixed back button */
+}
+
+/* Fixed Back Button */
+.backBtn {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  background: #09ac1f !important;
+  color: #fff;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+  z-index: 10;
+  width: auto;
+}
+
+.backBtn:hover {
+  background: #14cc00;
+}
+
+/* Problem Table */
+.problemTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.problemTable th,
+.problemTable td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.problemTable th {
+  background: #007bff;
+  color: #fff;
+  font-weight: bold;
+}
+
+.problemTable tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.problemTable tr:hover {
+  background: #f1f1f1;
+}
+
+/* Checkbox style */
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
