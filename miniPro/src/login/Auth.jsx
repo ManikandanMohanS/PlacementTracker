@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { auth } from "./FirebaseConfig";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
-import styles from "./loginpage.module.css"; // Import styles as a module
-
+import "bootstrap/dist/css/bootstrap.min.css";
+ // We'll create this CSS file
+import "./Auth.css"; // Ensure you have this CSS file for styling
 const Auth = () => {
+  // All your existing state and logic remains exactly the same
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -11,7 +13,6 @@ const Auth = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Handle Sign Up
   const handleSignUp = async () => {
     setLoading(true);
     setError(null);
@@ -26,7 +27,6 @@ const Auth = () => {
     setLoading(false);
   };
 
-  // Handle Login
   const handleLogin = async () => {
     setLoading(true);
     setError(null);
@@ -41,7 +41,6 @@ const Auth = () => {
     setLoading(false);
   };
 
-  // Handle Logout
   const handleLogout = async () => {
     setLoading(true);
     try {
@@ -56,47 +55,102 @@ const Auth = () => {
   };
 
   return (
-    <div className={styles["page-container"]}>
-      <div className={styles.container}>
-        <h2>{isRegistering ? "Register" : "Login"}</h2>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2>{isRegistering ? "Create Account" : "Welcome Back"}</h2>
+          <p className="auth-subtitle">
+            {isRegistering ? "Join our community" : "Sign in to continue"}
+          </p>
+        </div>
 
-        {error && <p>{error}</p>}
-
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        {isRegistering ? (
-          <button onClick={handleSignUp} disabled={loading}>
-            {loading ? "Signing Up..." : "Sign Up"}
-          </button>
-        ) : (
-          <button onClick={handleLogin} disabled={loading}>
-            {loading ? "Logging In..." : "Login"}
-          </button>
-        )}
-
-        <button onClick={() => setIsRegistering(!isRegistering)} disabled={loading}>
-          {isRegistering ? "Already have an account? Login" : "Don't have an account? Sign Up"}
-        </button>
-
-        {user && (
-          <div>
-            <p>Welcome, {user.email}</p>
-            <button onClick={handleLogout} disabled={loading}>
-              {loading ? "Logging Out..." : "Logout"}
-            </button>
+        {error && (
+          <div className="alert alert-danger auth-alert" role="alert">
+            {error}
           </div>
         )}
+
+        <div className="auth-form">
+          <div className="form-group">
+            <input
+              type="email"
+              className="form-control auth-input"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <input
+              type="password"
+              className="form-control auth-input"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          {isRegistering ? (
+            <button
+              className="btn auth-btn-primary"
+              onClick={handleSignUp}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Creating Account...
+                </>
+              ) : (
+                "Sign Up"
+              )}
+            </button>
+          ) : (
+            <button
+              className="btn auth-btn-primary"
+              onClick={handleLogin}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Signing In...
+                </>
+              ) : (
+                "Login"
+              )}
+            </button>
+          )}
+
+          <button
+            className="btn auth-btn-secondary"
+            onClick={() => setIsRegistering(!isRegistering)}
+            disabled={loading}
+          >
+            {isRegistering ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
+          </button>
+
+          {user && (
+            <div className="auth-user-section">
+              <p className="auth-welcome">Welcome, <strong>{user.email}</strong></p>
+              <button
+                className="btn auth-btn-logout"
+                onClick={handleLogout}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                    Signing Out...
+                  </>
+                ) : (
+                  "Logout"
+                )}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

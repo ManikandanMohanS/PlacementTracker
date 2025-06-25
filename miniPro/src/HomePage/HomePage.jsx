@@ -1,29 +1,31 @@
 import React from "react";
-import "./HomePage.css"; // Import the CSS file
+import { FaLaptopCode, FaBookOpen, FaChartLine } from "react-icons/fa";
+import "./HomePage.css";
 
 const HomePage = () => {
   return (
-    <section className="hero" id="homeP">
+    <section className="hero">
       <div className="container">
-        <h1 id="mainhead">Master Your Technical Interview Preparation</h1>
-        <p id="homepara">
+        <h1 className="main-heading">
+          Master Your <span className="highlight" >Technical Interviews</span>
+        </h1>
+        <p className="sub-heading">
           Curated programming problems, comprehensive solutions, and learning resources to help you ace your technical interviews.
         </p>
 
-        {/* Features Grid */}
         <div className="features-grid">
           <FeatureCard
-            icon="📘"
+            icon={<FaLaptopCode className="feature-icon" />}
             title="Structured Learning"
             description="Problems organized by difficulty and topics for systematic preparation."
           />
           <FeatureCard
-            icon="📄"
+            icon={<FaBookOpen className="feature-icon" />}
             title="Rich Resources"
             description="Access to detailed solutions, articles, and video tutorials."
           />
           <FeatureCard
-            icon="📊"
+            icon={<FaChartLine className="feature-icon" />}
             title="Track Progress"
             description="Monitor your progress across different topics and difficulty levels."
           />
@@ -33,13 +35,12 @@ const HomePage = () => {
   );
 };
 
-// Feature Card Component
 const FeatureCard = ({ icon, title, description }) => {
   return (
     <div className="feature-card">
-      <span className="feature-icon">{icon}</span>
-      <h3>{title}</h3>
-      <p id="descrip">{description}</p>
+      <div className="feature-icon-container">{icon}</div>
+      <h3 className="feature-title">{title}</h3>
+      <p className="feature-description">{description}</p>
     </div>
   );
 };

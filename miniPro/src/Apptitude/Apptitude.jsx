@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import styles from "./Apptitude.module.css";
 
-const aptitudeTopics = [
-  {
+const tests = {
+  aptitude: {
     title: "Quantitative Aptitude",
+    description: "Test your numerical and mathematical problem-solving skills",
+    icon: "🧮",
     questions: [
+     
       {
         question: "What is 20% of 150?",
         options: ["20", "30", "25", "35"],
@@ -110,32 +112,17 @@ const aptitudeTopics = [
         options: ["30 km/h", "40 km/h", "50 km/h", "60 km/h"],
         answer: "40 km/h",
       },
-      {
-        question: "A square has an area of 64 cm². Find its side length.",
-        options: ["6 cm", "7 cm", "8 cm", "9 cm"],
-        answer: "8 cm",
-      },
-      {
-        question: "Find the sum: 1 + 3 + 5 + 7 + 9.",
-        options: ["20", "25", "30", "35"],
-        answer: "25",
-      },
-      {
-        question: "Solve: 2 × (3 + 5) =",
-        options: ["10", "12", "14", "16"],
-        answer: "16",
-      },
-      {
-        question: "Convert 2.5 hours into minutes.",
-        options: ["120", "130", "140", "150"],
-        answer: "150",
-      },
+     
     ],
+    
   },
-  {
+  logical: {
     title: "Logical Reasoning",
-    questions: [
-      {
+    description: "Evaluate your ability to analyze patterns and relationships",
+    icon: "🧠",
+    questions: [{
+
+    
         question:
           "If A is B’s brother and B is C’s father, how is A related to C?",
         options: ["Uncle", "Brother", "Father", "Cousin"],
@@ -269,11 +256,14 @@ const aptitudeTopics = [
         options: ["4", "6", "8", "10"],
         answer: "6",
       },
-    ],
+    ]
+  
   },
-  {
-    title: "Verbal Test",
-    questions: [
+  reasoning: {
+    title: "Verbal Reasoning",
+    description: "Assess your language comprehension and verbal logic skills",
+    icon: "📚",
+     questions: [
       {
         question: "Choose the word that is most similar to 'BENEVOLENT'.",
         options: ["Generous", "Cruel", "Unkind", "Selfish"],
@@ -443,91 +433,356 @@ const aptitudeTopics = [
         answer: "Bright",
       },
     ],
-  },
-];
+  }
+};
 
-const ApptitudePage = () => {
-  const [selectedTopic, setSelectedTopic] = useState(null);
+const TestApp = () => {
+  const [activeTest, setActiveTest] = useState(null);
   const [answers, setAnswers] = useState({});
-  const [score, setScore] = useState(null);
+  const [scores, setScores] = useState({
+    aptitude: null,
+    logical: null,
+    reasoning: null
+  });
+  const [showResults, setShowResults] = useState(false);
+  const [testStarted, setTestStarted] = useState(false);
 
-  const handleOptionChange = (question, option) => {
-    setAnswers({ ...answers, [question]: option });
+  const handleOptionChange = (test, question, option) => {
+    setAnswers({
+      ...answers,
+      [test]: {
+        ...answers[test],
+        [question]: option
+      }
+    });
   };
 
-  const handleSubmit = () => {
+  const calculateScore = (test) => {
     let correct = 0;
-    selectedTopic.questions.forEach((q) => {
-      if (answers[q.question] === q.answer) {
+    tests[test].questions.forEach((q) => {
+      if (answers[test] && answers[test][q.question] === q.answer) {
         correct++;
       }
     });
-    setScore(correct);
+    return correct;
+  };
+
+  const handleSolve = (test) => {
+    const score = calculateScore(test);
+    setScores({
+      ...scores,
+      [test]: score
+    });
+    setShowResults(true);
+  };
+
+  const handleReset = (test) => {
+    setAnswers({
+      ...answers,
+      [test]: {}
+    });
+    setScores({
+      ...scores,
+      [test]: null
+    });
+    setShowResults(false);
+    setTestStarted(false);
+    setActiveTest(null);
+  };
+
+  const startTest = (test) => {
+    setActiveTest(test);
+    setTestStarted(true);
+  };
+
+  const styles = {
+    app: {
+      
+        backgroundColor: "#0a192f",
+      minHeight: "100vh",
+      color: "#e0e0e0",
+      padding: "20px",
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+    },
+    header: {
+      marginTop: "160px",
+      textAlign: "center",
+      marginBottom: "30px",
+      color: "#bb86fc"
+    },
+    testSelectionContainer: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+      gap: "20px",
+      marginBottom: "30px"
+    },
+    testCard: {
+      backgroundColor: "#1e1e1e",
+      borderRadius: "8px",
+      padding: "20px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
+      transition: "all 0.3s ease",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      textAlign: "center"
+    },
+    testCardHover: {
+      transform: "translateY(-5px)",
+      boxShadow: "0 6px 10px rgba(0, 0, 0, 0.4)"
+    },
+    testIcon: {
+      fontSize: "48px",
+      marginBottom: "15px"
+    },
+    testTitle: {
+      color: "#03dac6",
+      marginBottom: "10px",
+      fontSize: "20px"
+    },
+    testDescription: {
+      color: "#a0a0a0",
+      marginBottom: "20px",
+      fontSize: "14px"
+    },
+    startButton: {
+      padding: "10px 20px",
+      border: "none",
+      borderRadius: "4px",
+      backgroundColor: "#bb86fc",
+      color: "#000000",
+      fontWeight: "bold",
+      cursor: "pointer",
+      transition: "all 0.3s",
+      marginTop: "auto"
+    },
+    startButtonHover: {
+      backgroundColor: "#9a67ea",
+      transform: "scale(1.05)"
+    },
+    questionContainer: {
+      backgroundColor: "#1e1e1e",
+      borderRadius: "8px",
+      padding: "20px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
+      marginBottom: "30px"
+    },
+    backButton: {
+      padding: "10px 20px",
+      border: "none",
+      borderRadius: "4px",
+      backgroundColor: "#333",
+      color: "#ffffff",
+      fontWeight: "bold",
+      cursor: "pointer",
+      transition: "background-color 0.3s",
+      marginBottom: "20px"
+    },
+    backButtonHover: {
+      backgroundColor: "#444"
+    },
+    questionBlock: {
+      marginBottom: "20px",
+      paddingBottom: "15px",
+      borderBottom: "1px solid #333"
+    },
+    question: {
+      fontWeight: "500",
+      marginBottom: "10px",
+      color: "#ffffff"
+    },
+    options: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "8px"
+    },
+    optionLabel: {
+      display: "flex",
+      alignItems: "center",
+      padding: "8px 12px",
+      borderRadius: "4px",
+      backgroundColor: "#2d2d2d",
+      cursor: "pointer",
+      transition: "background-color 0.2s"
+    },
+    optionLabelHover: {
+      backgroundColor: "#3d3d3d"
+    },
+    correctAnswer: {
+      backgroundColor: "#2e7d32",
+      fontWeight: "bold"
+    },
+    wrongAnswer: {
+      backgroundColor: "#c62828",
+      textDecoration: "line-through"
+    },
+    buttonContainer: {
+      display: "flex",
+      justifyContent: "center",
+      gap: "10px",
+      marginTop: "20px"
+    },
+    solveBtn: {
+      padding: "10px 20px",
+      border: "none",
+      borderRadius: "4px",
+      backgroundColor: "#bb86fc",
+      color: "#000000",
+      fontWeight: "bold",
+      cursor: "pointer",
+      transition: "background-color 0.3s"
+    },
+    solveBtnHover: {
+      backgroundColor: "#9a67ea"
+    },
+    resetBtn: {
+      padding: "10px 20px",
+      border: "none",
+      borderRadius: "4px",
+      backgroundColor: "#03dac6",
+      color: "#000000",
+      fontWeight: "bold",
+      cursor: "pointer",
+      transition: "background-color 0.3s"
+    },
+    resetBtnHover: {
+      backgroundColor: "#018786"
+    },
+    scoreDisplay: {
+      marginTop: "15px",
+      textAlign: "center",
+      color: "#ffffff",
+      fontWeight: "bold",
+      fontSize: "18px"
+    }
   };
 
   return (
-    <div className={styles.container}>
-      <h1>Take Test</h1>
-      {!selectedTopic ? (
-        <div className={styles.topicList}>
-          {aptitudeTopics.map((topic, index) => (
-            <button
-              key={index}
-              className={styles.topicButton}
-              onClick={() => setSelectedTopic(topic)}
+    <div style={styles.app}>
+      <h1 style={styles.header}>Aptitude Test Portal</h1>
+      
+      {!testStarted ? (
+        <div style={styles.testSelectionContainer}>
+          {Object.keys(tests).map((testKey) => (
+            <div 
+              key={testKey} 
+              style={styles.testCard}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = styles.testCardHover.transform;
+                e.currentTarget.style.boxShadow = styles.testCardHover.boxShadow;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "";
+                e.currentTarget.style.boxShadow = styles.testCard.boxShadow;
+              }}
             >
-              {topic.title}
-            </button>
+              <div style={styles.testIcon}>{tests[testKey].icon}</div>
+              <h2 style={styles.testTitle}>{tests[testKey].title}</h2>
+              <p style={styles.testDescription}>{tests[testKey].description}</p>
+              <button
+                style={styles.startButton}
+                onClick={() => startTest(testKey)}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = styles.startButtonHover.backgroundColor;
+                  e.currentTarget.style.transform = styles.startButtonHover.transform;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = styles.startButton.backgroundColor;
+                  e.currentTarget.style.transform = "";
+                }}
+              >
+                Start Test
+              </button>
+            </div>
           ))}
         </div>
       ) : (
-        <div className={styles.questionContainer}>
-          <h2>{selectedTopic.title}</h2>
-          {selectedTopic.questions.map((q, index) => (
-            <div key={index} className={styles.questionBlock}>
-              <p className={styles.question}>{q.question}</p>
-              <div className={styles.options}>
-                {q.options.map((option, i) => (
-                  <label key={i} className={styles.optionLabel}>
-                    <input
-                      type="radio"
-                      name={q.question}
-                      value={option}
-                      onChange={() => handleOptionChange(q.question, option)}
-                    />
-                    {option}
-                  </label>
-                ))}
+        <div style={styles.questionContainer}>
+          <button
+            style={styles.backButton}
+            onClick={() => handleReset(activeTest)}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = styles.backButtonHover.backgroundColor}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = styles.backButton.backgroundColor}
+          >
+            ← Back to Tests
+          </button>
+          
+          <h2 style={{...styles.testTitle, textAlign: "center", marginBottom: "20px"}}>
+            {tests[activeTest].title}
+          </h2>
+          
+          {tests[activeTest].questions.map((q, index) => (
+            <div key={index} style={styles.questionBlock}>
+              <p style={styles.question}>{index + 1}. {q.question}</p>
+              <div style={styles.options}>
+                {q.options.map((option, i) => {
+                  const isCorrect = showResults && scores[activeTest] !== null && option === q.answer;
+                  const isWrong = showResults && 
+                                  scores[activeTest] !== null && 
+                                  answers[activeTest] && 
+                                  answers[activeTest][q.question] === option && 
+                                  option !== q.answer;
+
+                  return (
+                    <label
+                      key={i}
+                      style={{
+                        ...styles.optionLabel,
+                        ...(isCorrect ? styles.correctAnswer : {}),
+                        ...(isWrong ? styles.wrongAnswer : {}),
+                      }}
+                      onMouseEnter={(e) => !showResults && (e.currentTarget.style.backgroundColor = styles.optionLabelHover.backgroundColor)}
+                      onMouseLeave={(e) => !showResults && (e.currentTarget.style.backgroundColor = styles.optionLabel.backgroundColor)}
+                    >
+                      <input
+                        type="radio"
+                        name={`${activeTest}-${q.question}`}
+                        value={option}
+                        checked={answers[activeTest] && answers[activeTest][q.question] === option}
+                        onChange={() => handleOptionChange(activeTest, q.question, option)}
+                        disabled={showResults && scores[activeTest] !== null}
+                        style={{ marginRight: "10px" }}
+                      />
+                      {option}
+                    </label>
+                  );
+                })}
               </div>
             </div>
           ))}
-          <div className={styles.buttonContainer}>
-            <button className={styles.submitBtn} onClick={handleSubmit}>
-              Submit
-            </button>
-            <button
-              className={styles.backBtn}
-              onClick={() => setSelectedTopic(null)}
-            >
-              Back
-            </button>
-          </div>
-        </div>
-      )}
 
-      {score !== null && (
-        <div className={styles.floatingScore}>
-          <div className={styles.closeBtn} onClick={() => setScore(null)}>
-            X
+          <div style={styles.buttonContainer}>
+            {scores[activeTest] === null ? (
+              <button
+                style={styles.solveBtn}
+                onClick={() => handleSolve(activeTest)}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = styles.solveBtnHover.backgroundColor}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = styles.solveBtn.backgroundColor}
+              >
+                Submit Answers
+              </button>
+            ) : (
+              <button
+                style={styles.resetBtn}
+                onClick={() => handleReset(activeTest)}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = styles.resetBtnHover.backgroundColor}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = styles.resetBtn.backgroundColor}
+              >
+                Try Again
+              </button>
+            )}
           </div>
-          <p id="scorebtn" className={styles.scorebtn}>
-            {" "}
-            SCORE : {score} / {selectedTopic.questions.length}
-          </p>
+
+          {scores[activeTest] !== null && (
+            <div style={styles.scoreDisplay}>
+              Your Score: {scores[activeTest]} / {tests[activeTest].questions.length} • 
+              Accuracy: {Math.round((scores[activeTest] / tests[activeTest].questions.length) * 100)}%
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 };
 
-export default ApptitudePage;
+export default TestApp;

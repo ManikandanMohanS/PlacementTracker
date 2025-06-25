@@ -8,6 +8,7 @@ import Aptitude from "./Apptitude/Apptitude";
 import Auth from "./login/Auth";
 import { auth } from "./login/FirebaseConfig"; // Firebase authentication
 import Challenge from "./challenge/Challenge"; // Ensure the correct path
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [user, setUser] = useState(null);

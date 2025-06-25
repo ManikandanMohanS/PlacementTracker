@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./Challenge.module.css";
-import { auth, db, doc, setDoc, getDoc, updateDoc } from "../login/FirebaseConfig";
+import { auth, db, doc, setDoc, getDoc } from "../login/FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 
 const challenges = [
@@ -99,14 +98,12 @@ const challenges = [
     ]
   }
 ];
-
 const ChallengePage = () => {
   const [selectedChallenge, setSelectedChallenge] = useState(null);
   const [checkedProblems, setCheckedProblems] = useState({});
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Listen for user authentication state
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
@@ -120,7 +117,6 @@ const ChallengePage = () => {
     return () => unsubscribe();
   }, []);
 
-  // Load saved progress from Firebase
   const loadUserProgress = async (userId) => {
     try {
       const userDoc = await getDoc(doc(db, "users", userId));
@@ -132,7 +128,6 @@ const ChallengePage = () => {
     }
   };
 
-  // Handle checkbox change
   const handleCheckboxChange = async (challengeTitle, problemName) => {
     if (!user) {
       alert("Please log in to save progress.");
@@ -157,19 +152,119 @@ const ChallengePage = () => {
   };
 
   return (
-    
-    <section className={styles.challenges} id="challenges">
- 
-      <div className={styles.container}>
-        <h2 className={styles.challengeTitle}>Challenges</h2>
+    <div style={{
+      backgroundColor: "#0a192f",
+      minHeight: "calc(100vh - 64px)", // Subtract navbar height
+      color: "#ccd6f6",
+      padding: "0",
+      margin: "0",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      width: "100%",
+      overflowX: "hidden",
+      height: "110vh", // Full viewport height
+      // Adjust for fixed navbar height
+    }}>
+      <div style={{
+        width: "100%",
+        maxWidth: "1200px",
+        padding: "2rem 1rem",
+        margin: "0 auto",
+        marginTop: "10px",
+        boxSizing: "border-box"
+      }}>
+        <h2 style={{
+          textAlign: "center",
+          fontSize: "2.5rem",
+          margin: "1rem 0 2rem 0",
+          fontWeight: "700",
+          color: "#64ffda",
+          textTransform: "uppercase",
+          letterSpacing: "1px",
+          marginTop: "100px",
+          marrginBottom: "90px",
+       
+        }}>
+          Challenges
+        </h2>
 
         {!selectedChallenge && (
-          <div className={styles.challengeGrid}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "1.5rem",
+            margin: "0 auto",
+            width: "100%",
+            marginTop: "100px",
+            justifyContent: "center"
+          }}>
             {challenges.map((challenge, index) => (
-              <div className={styles.challengeCard} key={index}>
-                <h3>{challenge.title}</h3>
-                <p id="divpara1">Contains {challenge.problems.length} problems</p>
-                <button className={styles.solveBtn} onClick={() => setSelectedChallenge(challenge)}>
+              <div key={index} style={{
+                backgroundColor: "#112240",
+                borderRadius: "8px",
+                padding: "1.5rem",
+                boxShadow: "0 10px 30px -15px rgba(2, 12, 27, 0.7)",
+                transition: "all 0.3s ease",
+                cursor: "pointer",
+                border: "1px solid transparent",
+                height: "100%",
+                "&:hover": {
+                  transform: "translateY(-5px)",
+                  borderColor: "#64ffda",
+                  boxShadow: "0 20px 30px -15px rgba(2, 12, 27, 0.7)"
+                }
+              }}>
+                <h3 style={{
+                  color: "#ccd6f6",
+                  fontSize: "1.5rem",
+                  marginBottom: "0.5rem"
+                }}>
+                  {challenge.title}
+                </h3>
+                <p style={{
+                  color: "#8892b0",
+                  marginBottom: "1.5rem"
+                }}>
+                  Contains {challenge.problems.length} problems
+                </p>
+                <button 
+                  onClick={() => setSelectedChallenge(challenge)}
+                  style={{
+                    backgroundColor: "transparent",
+                    border: "1px solid #64ffda",
+                    color: "#64ffda",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontWeight: "500",
+                    transition: "all 0.3s ease",
+                    position: "relative",
+                    overflow: "hidden",
+                    "&:hover": {
+                      backgroundColor: "rgba(100, 255, 218, 0.1)",
+                      transform: "translateY(-2px)",
+                      boxShadow: "0 5px 15px rgba(100, 255, 218, 0.2)"
+                    },
+                    "&:active": {
+                      transform: "translateY(0)"
+                    },
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: "0",
+                      left: "-100%",
+                      width: "100%",
+                      height: "100%",
+                      background: "linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.4), transparent)",
+                      transition: "0.5s"
+                    },
+                    "&:hover::before": {
+                      left: "100%"
+                    }
+                  }}
+                >
                   View Problems
                 </button>
               </div>
@@ -178,43 +273,201 @@ const ChallengePage = () => {
         )}
 
         {selectedChallenge && (
-          <div className={styles.problemList}>
-            <h3>{selectedChallenge.title}</h3>
-            <table className={styles.problemTable}>
-              <thead>
-                <tr>
-                  <th>S.No</th>
-                  <th>Problem Name</th>
-                  <th>Action</th>
-                  <th>Completed</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedChallenge.problems.map((problem, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{problem.name}</td>
-                    <td>
-                      <button className={styles.solveBtn} onClick={() => window.open(problem.link, "_blank")}>
-                        Solve
-                      </button>
-                    </td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={checkedProblems[selectedChallenge.title]?.[problem.name] || false}
-                        onChange={() => handleCheckboxChange(selectedChallenge.title, problem.name)}
-                      />
-                    </td>
+          <div style={{
+            backgroundColor: "#112240",
+            borderRadius: "8px",
+            padding: "2rem",
+            boxShadow: "0 10px 30px -15px rgba(2, 12, 27, 0.7)",
+            border: "1px solid #1e2a47",
+            width: "100%",
+            margin: "0 auto"
+          }}>
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "2rem",
+              flexWrap: "wrap",
+              gap: "1rem"
+            }}>
+              <button 
+                onClick={() => setSelectedChallenge(null)}
+                style={{
+                  backgroundColor: "transparent",
+                  border: "1px solid #64ffda",
+                  color: "#64ffda",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  fontWeight: "500",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "rgba(100, 255, 218, 0.1)",
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 5px 15px rgba(100, 255, 218, 0.2)"
+                  },
+                  "&:active": {
+                    transform: "translateY(0)"
+                  }
+                }}
+              >
+                ← Back to Challenges
+              </button>
+              <h3 style={{
+                color: "#ccd6f6",
+                fontSize: "clamp(1.5rem, 4vw, 1.8rem)", // Responsive font size
+                margin: 0,
+                textAlign: "center",
+                flex: 1,
+                minWidth: "200px"
+              }}>
+                {selectedChallenge.title}
+              </h3>
+              <div style={{
+                backgroundColor: "rgba(100, 255, 218, 0.1)",
+                color: "#64ffda",
+                padding: "0.5rem 1rem",
+                borderRadius: "4px",
+                fontSize: "0.9rem",
+                border: "1px solid #64ffda",
+                whiteSpace: "nowrap"
+              }}>
+                {selectedChallenge.problems.filter(problem => 
+                  checkedProblems[selectedChallenge.title]?.[problem.name]
+                ).length}/{selectedChallenge.problems.length} Solved
+              </div>
+            </div>
+
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <table style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                color: "#ccd6f6",
+                tableLayout: "fixed"
+              }}>
+                <thead>
+                  <tr style={{
+                    backgroundColor: "rgba(100, 255, 218, 0.1)",
+                    color: "#64ffda"
+                  }}>
+                    <th style={{
+                      padding: "12px 15px",
+                      textAlign: "center",
+                      borderBottom: "2px solid #64ffda",
+                      width: "10%"
+                    }}>S.No</th>
+                    <th style={{
+                      padding: "12px 15px",
+                      borderBottom: "2px solid #64ffda",
+                      width: "50%"
+                    }}>Problem Name</th>
+                    <th style={{
+                      padding: "12px 15px",
+                      borderBottom: "2px solid #64ffda",
+                      width: "20%"
+                    }}>Action</th>
+                    <th style={{
+                      padding: "12px 15px",
+                      borderBottom: "2px solid #64ffda",
+                      width: "20%"
+                    }}>Completed</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <button className={styles.backBtn} onClick={() => setSelectedChallenge(null)}>Back</button>
+                </thead>
+                <tbody>
+                  {selectedChallenge.problems.map((problem, index) => {
+                    const isChecked = checkedProblems[selectedChallenge.title]?.[problem.name];
+                    return (
+                      <tr key={index} style={{
+                        backgroundColor: isChecked ? "rgba(100, 255, 218, 0.05)" : "transparent",
+                        borderBottom: "1px solid #1e2a47",
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          backgroundColor: "rgba(100, 255, 218, 0.03)"
+                        }
+                      }}>
+                        <td style={{
+                          padding: "12px 15px",
+                          textAlign: "center",
+                          color: "#8892b0",
+                          wordWrap: "break-word"
+                        }}>
+                          {index + 1}
+                        </td>
+                        <td style={{
+                          padding: "12px 15px",
+                          color: isChecked ? "#64ffda" : "#ccd6f6",
+                          fontWeight: isChecked ? "500" : "normal",
+                          wordWrap: "break-word"
+                        }}>
+                          {problem.name}
+                        </td>
+                        <td style={{ 
+                          padding: "12px 15px",
+                          wordWrap: "break-word"
+                        }}>
+                          <button 
+                            onClick={() => window.open(problem.link, "_blank")}
+                            style={{
+                              backgroundColor: "rgba(100, 255, 218, 0.1)",
+                              border: "1px solid #64ffda",
+                              color: "#64ffda",
+                              padding: "0.25rem 0.75rem",
+                              borderRadius: "4px",
+                              cursor: "pointer",
+                              fontWeight: "500",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "0.25rem",
+                              margin: "0 auto",
+                              transition: "all 0.3s ease",
+                              "&:hover": {
+                                backgroundColor: "rgba(100, 255, 218, 0.2)",
+                                transform: "translateY(-2px)",
+                                boxShadow: "0 5px 15px rgba(100, 255, 218, 0.2)"
+                              },
+                              "&:active": {
+                                transform: "translateY(0)"
+                              }
+                            }}
+                          >
+                            ↗ Solve
+                          </button>
+                        </td>
+                        <td style={{ 
+                          padding: "12px 15px", 
+                          textAlign: "center",
+                          wordWrap: "break-word"
+                        }}>
+                          <input
+                            type="checkbox"
+                            checked={isChecked || false}
+                            onChange={() => handleCheckboxChange(selectedChallenge.title, problem.name)}
+                            style={{
+                              width: "18px",
+                              height: "18px",
+                              accentColor: "#64ffda",
+                              cursor: "pointer",
+                              transform: "scale(1.2)",
+                              transition: "transform 0.2s ease",
+                              "&:hover": {
+                                transform: "scale(1.3)"
+                              }
+                            }}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 };
 
